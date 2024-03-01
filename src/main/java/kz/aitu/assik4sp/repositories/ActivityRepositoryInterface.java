@@ -6,7 +6,7 @@ import java.sql.Time;
 import java.sql.Date;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-
+// Method to find activities 
 public interface ActivityRepositoryInterface extends JpaRepository<Activity, Integer>{
     List<Activity> findByType(String type);
     List<Activity> findByDate(Date date);
