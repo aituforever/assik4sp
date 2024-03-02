@@ -1,7 +1,7 @@
 package kz.aitu.assik4sp.controllers;
 
-import kz.aitu.assik4sp.models.Goal;
-import kz.aitu.assik4sp.services.interfaces.GoalServiceInterface;
+import kz.aitu.assik4sp.models.Measurement;
+import kz.aitu.assik4sp.services.interfaces.MeasurementServiceInterface;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,51 +10,49 @@ import java.sql.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("goals")
-public class GoalController {
-    private final GoalServiceInterface service;
+@RequestMapping("measurements")
+public class MeasurementController {
+    private final MeasurementServiceInterface service;
 
-    public GoalController(GoalServiceInterface service) {
+    public MeasurementController(MeasurementServiceInterface service) {
         this.service = service;
     }
     @GetMapping("/")
-    public List<Goal> getAll(){
+    public List<Measurement> getAll(){
         return service.getAll();
     }
-    @GetMapping("/{goalid}")
-    public ResponseEntity<Goal> getbyId(@PathVariable("goalid") int id){
-        Goal goal = service.getById(id);
-        if(goal==null)
+    @GetMapping("/{measurementid}")
+    public ResponseEntity<Measurement> getbyId(@PathVariable("measurementid") int id){
+        Measurement measurement = service.getById(id);
+        if(measurement==null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(goal, HttpStatus.OK);
+        return new ResponseEntity<>(measurement, HttpStatus.OK);
     }
 
     @PostMapping("/")
-    public ResponseEntity<Goal> create(@RequestBody Goal goal){
-        Goal createdGoal = service.create(goal);
-        if(createdGoal==null)
+    public ResponseEntity<Measurement> create(@RequestBody Measurement measurement){
+        Measurement createdMeasurement = service.create(measurement);
+        if(createdMeasurement==null)
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        return new ResponseEntity<>(createdGoal, HttpStatus.CREATED);
+        return new ResponseEntity<>(createdMeasurement, HttpStatus.CREATED);
     }
 
     @GetMapping("/type/{type}")
-    public List<Goal> getAllByType(@PathVariable("type") String type){
+    public List<Measurement> getAllByType(@PathVariable("type") String type){
         return service.getByType(type);
     }
-    @GetMapping("/startDate/{startDate}")
-    public List<Goal> getAllByDate(@PathVariable("startDate") Date startDate){
-        return service.getByStartDate(startDate);
+    @GetMapping("/date/{date}")
+    public List<Measurement> getAllByDate(@PathVariable("date") Date date){
+        return service.getByDate(date);
     }
-    @GetMapping("/targetValue/{targetValue}")
-    public List<Goal> getAllByTargetValue(@PathVariable("targetValue") double targetValue){
-        return service.getByTargetValue(targetValue);
+
+    @GetMapping("/value/{value}")
+    public List<Measurement> getAllByValue(@PathVariable("value") double value){
+        return service.getByValue(value);
     }
-    @GetMapping("/durationDays/{durationDays}")
-    public List<Goal> getAllByDurationDays(@PathVariable("durationDays") int durationDays){
-        return service.getByDurationDays(durationDays);
-    }
-    @GetMapping("/achieved/{achieved}")
-    public List<Goal> getAllByNotes(@PathVariable("achieved") boolean achieved){
-        return service.getByAchieved(achieved);
+
+    @GetMapping("/unit/{unit}")
+    public List<Measurement> getAllByUnit(@PathVariable("unit") String unit){
+        return service.getByUnit(unit);
     }
 }
