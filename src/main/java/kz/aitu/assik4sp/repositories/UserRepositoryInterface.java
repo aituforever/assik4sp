@@ -11,4 +11,5 @@ public interface UserRepositoryInterface extends JpaRepository<User, Integer> {
     List<User> findByHeight(int height);
     List<User> findByWeight(int weight);
     List<User> findByGender(String gender);
+    User findByUsername(String username);
 }
