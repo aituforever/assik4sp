@@ -1,11 +1,8 @@
 package kz.aitu.assik4sp.controllers;
 
-import kz.aitu.assik4sp.models.Activity;
 import kz.aitu.assik4sp.models.User;
 import kz.aitu.assik4sp.services.interfaces.UserServiceInterface;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +24,7 @@ public class UserController {
         return "Say Hello";
     }
 
+
     @GetMapping("/")
     public List<User> getAll(){
         return service.getAll();
@@ -41,12 +39,21 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);//200
     }
 
-    @PostMapping("/")
-    public ResponseEntity<User> create(@RequestBody User user){
+    @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody User user){
         User createdUser = service.create(user);
         if(createdUser==null)
-             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody User user){
+        User existingUser = service.getByUsername(user.getUsername());
+        if(existingUser == null || !user.getPassword().equals(existingUser.getPassword())) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<>("Welcome, " + existingUser.getFname(), HttpStatus.OK);
     }
     @GetMapping ("/sname/{user_sname}")
     public List<User> getAllBySurname(@PathVariable("user_sname") String sname){
@@ -60,7 +67,11 @@ public class UserController {
     public List<User> getAllByDate(@PathVariable("dateofbirth") Date dateofbirth){
         return service.getByDateofbirth(dateofbirth);
     }
-
+    @GetMapping("/{user_id}/bmi")
+    public ResponseEntity<Double> getBMI(@PathVariable("user_id") int id){
+        double bmi = service.getBMI(id);
+        return new ResponseEntity<>(bmi, HttpStatus.OK);
+    }
     @GetMapping("/height/{height}")
     public List<User> getAllByHeight(@PathVariable("height") int height){
         return service.getByHeight(height);
