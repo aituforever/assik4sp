@@ -60,4 +60,18 @@ public class UserService implements UserServiceInterface {
     public List<User> getByGender(String gender) {
         return repo.findByGender(gender);
     }
+
+    @Override
+    public User getByUsername(String username) {
+        return repo.findByUsername(username);
+    }
+
+    @Override
+    public double getBMI(int id) {
+        User user = repo.findById(id).orElse(null);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        return user.calculateBMI();
+    }
 }
